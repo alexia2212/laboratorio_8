@@ -2,7 +2,9 @@ package com.example.lab8_20192270.Controller;
 
 import ch.qos.logback.core.model.Model;
 import com.example.lab8_20192270.Entity.Evento;
+import com.example.lab8_20192270.Entity.TipoTicketEvento;
 import com.example.lab8_20192270.Repository.EventoRepo;
+import com.example.lab8_20192270.Repository.TipoTicketRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.Optional;
 //@RequestMapping("/evento")
 public class EventoController {
 
+    @Autowired
+    TipoTicketRepo tipoTicketRepo;
     @Autowired
     EventoRepo eventoRepo;
     @GetMapping("/evento")
@@ -33,12 +37,12 @@ public class EventoController {
             int id = Integer.parseInt(idStr);
             Optional<Evento> optProduct = eventoRepo.findById(id);
             if (optProduct.isPresent()) {
-                respuesta.put("product",optProduct.get());
+                respuesta.put("evento",optProduct.get());
                 respuesta.put("resultado;","exitoso");
 
                 return ResponseEntity.ok(respuesta);
             } else {
-                respuesta.put("msg","Producto no encontrado");
+                respuesta.put("msg","Id no encontrado");
             }
         } catch (NumberFormatException e) {
             respuesta.put("msg","el ID debe ser un número entero positivo");
@@ -65,7 +69,29 @@ public class EventoController {
             return ResponseEntity.ok(respuesta);
         }
     }
+    @GetMapping("/eventoConTipoDeTicket/{id}")
+    public ResponseEntity<HashMap<String, Object>> obtenerIdTicket(@PathVariable("id") String idStr){
+        HashMap<String, Object> respuesta = new HashMap<>();
 
+        try{
+            int id = Integer.parseInt(idStr);
+            Optional<TipoTicketEvento> optTicket = tipoTicketRepo.findById(id);
+            if (optTicket.isPresent()) {
+                respuesta.put("ticket",optTicket.get());
+                respuesta.put("resultado;","exitoso");
+
+                return ResponseEntity.ok(respuesta);
+            } else {
+                respuesta.put("msg","Id no encontrado");
+            }
+        } catch (NumberFormatException e) {
+            respuesta.put("msg","el ID debe ser un número entero positivo");
+        }
+        respuesta.put("Resultado","Falla");
+        return ResponseEntity.badRequest().body(respuesta);
+
+
+    }
 
 
 }
