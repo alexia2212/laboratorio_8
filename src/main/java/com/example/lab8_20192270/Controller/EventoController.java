@@ -93,5 +93,23 @@ public class EventoController {
 
     }
 
-
+    @DeleteMapping("/evento")
+    public ResponseEntity<HashMap<String,String>> borrarSoli(@RequestParam("idevento") int id){
+        HashMap<String, String> respuesta = new HashMap<>();
+        Optional<Evento> optionalEvento= eventoRepo.findById(id);
+        if (optionalEvento.isPresent()){
+            Evento evento = optionalEvento.get();
+            if (optionalEvento.isPresent()){
+                eventoRepo.deleteById(id);
+                respuesta.put("id solicitud borrada",String.valueOf(evento.getId()));
+                return ResponseEntity.ok(respuesta);
+            }else {
+                respuesta.put("error","La solicitud no está denegada");
+                return ResponseEntity.badRequest().body(respuesta);
+            }
+        }else{
+            respuesta.put("error","No existe solicitud con este ID");
+            return ResponseEntity.badRequest().body(respuesta);
+        }
+    }
 }
