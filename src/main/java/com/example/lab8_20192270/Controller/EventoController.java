@@ -33,8 +33,9 @@ public class EventoController {
             int id = Integer.parseInt(idStr);
             Optional<Evento> optProduct = eventoRepo.findById(id);
             if (optProduct.isPresent()) {
-                respuesta.put("result","success");
                 respuesta.put("product",optProduct.get());
+                respuesta.put("resultado;","exitoso");
+
                 return ResponseEntity.ok(respuesta);
             } else {
                 respuesta.put("msg","Producto no encontrado");
@@ -42,7 +43,7 @@ public class EventoController {
         } catch (NumberFormatException e) {
             respuesta.put("msg","el ID debe ser un número entero positivo");
         }
-        respuesta.put("result","failure");
+        respuesta.put("Resultado","Falla");
         return ResponseEntity.badRequest().body(respuesta);
 
 
